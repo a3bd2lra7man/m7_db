@@ -1,0 +1,60 @@
+part of m7db;
+
+typedef  M7Query<T extends M7Table> = Future<List<T>> Function();
+
+abstract class M7Dao<T extends M7Table>{
+
+  Map<StreamController,M7Query> _streamsMap = {};
+  StreamController<List<T>> _stream;
+  Database database;
+  String tableName;
+  M7Dao(this.database,this.tableName);
+
+  void dispose(){
+    _stream.close();
+  }
+  Stream<List<T>>  watchAll() {
+    if(_stream == null){
+      _stream = StreamController();
+      _streamsMap[_stream] = ()async=>(await database.query(tableName)).map(fromDB).toList();
+      notifyListener();
+    }
+    return _stream.stream;
+  }
+
+  void watch(StreamController streamController,M7Query query) => _streamsMap[streamController] = query;
+
+  Future insertAll(List<T> objects)async{
+    var batch = database.batch();
+    objects.forEach((element)=> batch.insert(tableName,element.toMap()));
+    await batch.commit(noResult: true,continueOnError: true);
+    await notifyListener();
+  }
+
+  Future insert(T object)async{
+    await database.insert(tableName,object.toMap() ,conflictAlgorithm: ConflictAlgorithm.replace);
+    await notifyListener();
+  }
+
+  Future update(T object)async{
+    await database.update(tableName, object.toMap(),where: 'id = ?',whereArgs: [object.primaryKey] ,conflictAlgorithm: ConflictAlgorithm.replace);
+    await notifyListener();
+  }
+
+  Future  delete(int id)async{
+    await database.delete(tableName,where: 'id = ?',whereArgs: [id]);
+    await notifyListener();
+  }
+
+
+
+  Future getAll()async => await database.query(tableName);
+
+  T fromDB (Map<String,dynamic> map);
+
+  Future notifyListener()async{
+    _streamsMap.forEach((key, value) async=> key.add(await value()));
+  }
+
+
+}
