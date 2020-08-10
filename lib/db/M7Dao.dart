@@ -4,29 +4,6 @@ part of m7db;
 typedef  M7Query<T extends M7Table> = Future<List<Map<String,dynamic>>> Function();
 typedef  M7QueryRes<T extends M7Table> = Future<List<T>> Function();
 
-class UserDao extends M7Dao{
-  UserDao(Database database, String tableName) : super(database, tableName);
-
-  @override
-  M7Table fromDB(Map<String, dynamic> map) {
-    // TODO: implement fromDB
-    throw UnimplementedError();
-  }
-
-
-  Stream getMyOwnAll(){
-    Stream stream = watch(()async =>await database.query('table'));
-    return stream;
-  }
-
-  void doAnyOperation()async{
-    await database.query('AnyOperation');
-    notifyListener();
-  }
-
-
-}
-
 abstract class M7Dao<T extends M7Table>{
 
   Map<StreamController,M7QueryRes> _streamsMap = {};
