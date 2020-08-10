@@ -188,7 +188,8 @@ by these steps
       }
     ```
 
-    *notifyListener() just tell the class to emits new values to all streams that the class hold*
+    *notifyListener() just tell the class to emits new values to all streams that the class hold *
+    *to the M7Dao class to close all the streams it's hold use dispose()*
 
 
 
