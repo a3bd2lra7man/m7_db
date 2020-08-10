@@ -178,8 +178,8 @@ by these steps
 
   Stream getMyOwnAll(){
     Stream stream = watch(()async =>await database.query('table'));
-    return stream;
     notifyListener();
+    return stream;
   }
 
   void doAnyOperation()async{
