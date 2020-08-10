@@ -174,19 +174,19 @@ by these steps
 
     #### ex:
 
-    ```dart
+```dart
 
-      Stream getMyOwnAll(){
-        Stream stream = watch(()async =>await database.query('table'));
-        return stream;
-        notifyListener();
-      }
+  Stream getMyOwnAll(){
+    Stream stream = watch(()async =>await database.query('table'));
+    return stream;
+    notifyListener();
+  }
 
-      void doAnyOperation()async{
-        await database.query('AnyOperation');
-        notifyListener();
-      }
-    ```
+  void doAnyOperation()async{
+    await database.query('AnyOperation');
+    notifyListener();
+  }
+```
 
     *notifyListener() just tell the class to emits new values to all streams that the class hold *
     *to the M7Dao class to close all the streams it's hold use dispose()*
