@@ -3,6 +3,8 @@ part of m7db;
 
 abstract class M7DB{
 
+  final String databaseName;
+  M7DB(this.databaseName);
 
   Database _db;
 
@@ -13,7 +15,7 @@ abstract class M7DB{
 
   Future<Database> _createAppDataBase() async {
     return await openDatabase(
-        "${await getDatabasesPath()}/App.db",
+        "${await getDatabasesPath()}/$databaseName",
         onCreate: onCreate,
         version: 1
     );

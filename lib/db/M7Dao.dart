@@ -1,17 +1,20 @@
 part of m7db;
 
-typedef  M7Query<T extends M7Table> = Future<List<T>> Function();
+typedef  M7Query<T extends M7Table> = Future<List<Map<String,dynamic>>> Function();
+typedef  M7QueryRes<T extends M7Table> = Future<List<T>> Function();
 
 abstract class M7Dao<T extends M7Table>{
 
-  Map<StreamController,M7Query> _streamsMap = {};
+  Map<StreamController,M7QueryRes> _streamsMap = {};
+  // ignore: close_sinks
   StreamController<List<T>> _stream;
-  Database database;
-  String tableName;
+  final Database database;
+  final String tableName;
+
   M7Dao(this.database,this.tableName);
 
   void dispose(){
-    _stream.close();
+    _streamsMap.keys.forEach((stream)=>stream.close());
   }
   Stream<List<T>>  watchAll() {
     if(_stream == null){
@@ -22,7 +25,16 @@ abstract class M7Dao<T extends M7Table>{
     return _stream.stream;
   }
 
-  void watch(StreamController streamController,M7Query query) => _streamsMap[streamController] = query;
+  Stream watch(M7Query query) {
+    // ignore: close_sinks
+    StreamController streamController = StreamController();
+    _streamsMap[streamController] =() async => (await query()).map(fromDB).toList();
+    notifyListener();
+    return streamController.stream;
+  }
+  Future<T> getById(id)async{
+    return fromDB((await database.query(tableName,where: 'id = ?' ,whereArgs: [id])).first);
+  }
 
   Future insertAll(List<T> objects)async{
     var batch = database.batch();
@@ -41,8 +53,8 @@ abstract class M7Dao<T extends M7Table>{
     await notifyListener();
   }
 
-  Future  delete(int id)async{
-    await database.delete(tableName,where: 'id = ?',whereArgs: [id]);
+  Future  delete(T object)async{
+    await database.delete(tableName,where: 'id = ?',whereArgs: [object.primaryKey]);
     await notifyListener();
   }
 
