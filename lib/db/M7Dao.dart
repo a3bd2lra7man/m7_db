@@ -7,7 +7,7 @@ typedef  M7QueryRes<T extends M7Table> = Future<List<T>> Function();
 abstract class M7Dao<T extends M7Table>{
 
   Map<StreamController,M7QueryRes> _streamsMap = {};
-  // ignore: close_sinks
+  //  ignore: close_sinks
   StreamController<List<T>> _stream;
   final Database database;
   final String tableName;
