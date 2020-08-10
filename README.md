@@ -196,9 +196,13 @@ by these steps
 u still can access the database from the inherited class and do what ever u want above the default ones
 
 to use it u have to
+    
 1- extends it
+
 2- override fromDB() *this called inside the helpers method for Basic Crud* u can make use the override T.fromMap() constructor in M7Table
+
 3- override the default constructor which has 2 parameter the first is the database instance the second is the table name to deal with
+
 4- call dispose() on it's instance to close all the stream M7Dao has
 #### ex:
 
