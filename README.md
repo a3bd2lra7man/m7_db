@@ -168,10 +168,29 @@ second it's also work with stream and have a default one that will return the wh
 if u want to make your own stream u can because this library designed with that in mined
 by these steps
 
-    1- make your stream in StreamController way
-    2- once created call watch() function with two parameter the first is the streamController another one is the query u wanna execute
-    when ever change happened to the database with the inherited function this stream will be emitted the new values automatically
-    but if u want to make your own function that deals with database call notifyListener() to emit the news value to the streams u listen
+    1- invoke the watch() function on M7Dao instance with parameter that do query the db
+    this will return a new stream
+    if u wish to make your own queries please don't forget to call notifyListener()
+
+    #### ex:
+
+    ```dart
+
+      Stream getMyOwnAll(){
+        Stream stream = watch(()async =>await database.query('table'));
+        return stream;
+        notifyListener();
+      }
+
+      void doAnyOperation()async{
+        await database.query('AnyOperation');
+        notifyListener();
+      }
+    ```
+
+    *notifyListener() just tell the class to emits new values to all streams that the class hold*
+
+
 
 u still can access the database from the inherited class and do what ever u want above the default ones
 
@@ -216,7 +235,7 @@ main()async{
 
   StreamController streamController;
 
-  userDao.watch(streamController, () async=>await userDao.database.query('table'));
+  Stream stream = userDao.watch(streamController, () async=>await userDao.database.query('table'));
 
   userDao.notifyListener();
 
