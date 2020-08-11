@@ -54,26 +54,27 @@ main(){
 
 1- it have three main classes M7DB M7Table and M7Dao
 
-2- u have to extends the three tables to let them work with each other 
+2- you have to extends the three tables to let them work with each other 
 
-3- the three classes try to remove the redundant code and gives you helper function
+3- the three classes try to remove the redundant code and gives you helper functions
 
  
 
-### M7DB Class
+## M7DB Class
 
 M7DB will create the database beyond you and provide a singleton database
-M7DB provide a helper methods as createTable()
+
+M7DB also provide a helper methods as createTable()
 
 #### Example
 
-to use it u should extends M7DB
+to use it you should extends M7DB
 
 M7DB force you to override 
 
 1- the databaseName getter
 
-2- onCreate function passed to the initialization of database *perfect place to create your table* 
+2- onCreate function passed to the initialization of database (perfect place to create your table) 
 
 ```dart
 
@@ -102,20 +103,23 @@ class AppDB extends M7DB{
 
 ```
 
-### M7Table Class
 
-M7Table is helper class for helping creation of tables fields
+## M7Table Class
+
+M7Table is helper class for helping creation of tables and it's fields
 
 M7Table have several help methods to do common situation happens to developers when working with sqlite 
+
+The situations M7Table helps for is 
 
 1- is the problem of saving boolean field to database tables, M7Table Provides  
     *booleanToInt(bool)* to help you here 
     and the reverse one *intToBoolean(int)*  
-    for helps read write boolean data from and to database
+    for helps reading and writing boolean data from and to database
 
 2- work with date in the same convention of converting boolean to integer 
     there is *dateToInt(DateTime)* 
-    and *intToDate(int)* helps read write DateTime from and to database   
+    and *intToDate(int)* helps reading and writing DateTime from and to database   
 
 #### example
 
@@ -194,7 +198,10 @@ class User  extends M7Table{
 }
 ```
 
-###  M7DAO Class 
+
+
+
+##  M7DAO Class 
 
 DAO implementation is easy to have 
 
@@ -210,7 +217,7 @@ class UserDao extends M7Dao<User>{
   UserDao(Database database, String tableName) : super(database, tableName);
   
   // must override u can simply easy call .fromMap() from your M7Table
-  // this convert the data from database represent way to M7Table way
+  // this convert the data from database represented way to M7Table way
   // not restricted to M7Table fromMap() constructor you can do what you wants
   @override
   User fromDB(Map<String, dynamic> map) => User.fromMap(map);
@@ -224,19 +231,19 @@ class UserDao extends M7Dao<User>{
     // getting by id
     User user1 = await this.getById('id');
 
-    // getting All the table
+    // getting All columns in the table <T>
     List<User> users=  await this.getAll();
 
     // insertAll<T>
     await this.insertAll([user,user]);
     
-    // insert one entity 
+    // insert one entity <T> 
     await this.insert(user);
 
-    // updating one entity
+    // updating one entity <T>
     await this.update(user.copyWith(name: "Ali"));
 
-    // deleting entity 
+    // deleting entity <T>
     await this.delete(user);
     
     ///  [watchAll] return a stream keep watching the whole table 
@@ -247,61 +254,28 @@ class UserDao extends M7Dao<User>{
     // close all streams that the class holds
     this.dispose();
     
-    // u can access the database and do what ever  you need with it
+    // u can access the database and do what ever you need with it
     this.database;
 
-    // u can make another stream watch the database with your custom query 
-    // to make it you have to do it in streamController Way
- 
-    // 1- make your controller
-    StreamController streamController = StreamController();
-  
-    // 2- call watch() function in Dao instance with two parameter the first is the streamController and the second is function hold your query
-    userDao.watch(streamController, () => database.query(tableName));
-
-        
   }
-  
-
-  // helper stream Controller
-  StreamController _streamController;
-
-  // u can do your own stream and passe
-  void dealWithStreams(){
-    // to tell the database u want to have a stream from certain expression to execute
-    // u cam use watch() function to keep watching the real data in time
-    watch(_streamController, () => database.query(tableName,where: 'name = ?',whereArgs: ['ahmed']));
-    
-    // this to up to date refreshing state to listeners
-    notifyListener();
-    
-  }
-
-
-  // then you should override dispose 
-  // and closing All streamController here   
-  @override
-  void dispose() {
-    _streamController.close();
-    super.dispose();
-  }
-
-
 
 
 }
 ```
 
-M7Dao work with the streams in mined and provide you a way to keep watching the database in stream 
+M7Dao work with the streams in mined and provides you a way to keep watching the database in stream 
+
 M7Dao gives you that with the query you want 
 
 to do that you have three steps 
 
 1- make your stream in streamController way
+
 2- call watch function provide by M7Dao with two parameter the first is the streamController the second is your query
+
 3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
 
-*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to update it's stream*
+*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
  
  
 #### example yo use M7Dao with streams
@@ -343,6 +317,8 @@ class UserDao extends M7Dao<User>{
     // then listen to it and when ever the db changes the stream will be emitted with the new value's depends on your query u passed to watch() function
     _streamController.stream.listen((event) { });
   }
+  
+
   @override
   void dispose() {
     
