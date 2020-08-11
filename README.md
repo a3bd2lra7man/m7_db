@@ -53,6 +53,7 @@ main(){
 
 }
 ```
+\n \n
 ## How to use it in the correct way
 
     1- it have three main classes M7DB M7Table and M7Dao
