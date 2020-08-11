@@ -66,7 +66,7 @@ M7DB will create the database beyond you and provide a singleton database
 
 M7DB also provide a helper methods as createTableStatement()
 
-#### Example
+### Example
 
 to use it you should extends M7DB
 
@@ -117,11 +117,11 @@ The situations M7Table helps for is
     and the reverse one *intToBoolean(int)*  
     for helps reading and writing boolean data from and to database
 
-2- work with date in the same convention of converting boolean to integer 
+2- work with DateTime in the same convention of converting boolean to integer 
     there is *dateToInt(DateTime)* 
     and *intToDate(int)* helps reading and writing DateTime from and to database   
 
-#### example
+### Example
 
 first let's look at how the data class will be without extending M7Table
 
@@ -136,7 +136,7 @@ class User{
 }
 ```
 
-then let's look at how will be with the extending
+then let's look at how it will be with the extending
 
 ```dart
 
@@ -207,7 +207,9 @@ DAO implementation is easy to have
 
 1- extends M7Dao<T extends M7Table>
 
-2- override the default constructor and fromDB method 
+2- override the default constructor and fromDB(Map) method 
+
+### Example
 
 ```dart
 
@@ -263,6 +265,8 @@ class UserDao extends M7Dao<User>{
 }
 ```
 
+### M7Dao with streams in mined
+
 M7Dao work with the streams in mined and provides you a way to keep watching the database in stream 
 
 M7Dao gives you that with the query you want 
@@ -271,14 +275,14 @@ to do that you have three steps
 
 1- make your stream in streamController way
 
-2- call watch function provide by M7Dao with two parameter the first is the streamController the second is your query
+2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
 
 3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
 
 *if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
  
  
-#### example yo use M7Dao with streams
+#### Example yo use M7Dao with streams
  
 ```dart
 
