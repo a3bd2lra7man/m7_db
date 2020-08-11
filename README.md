@@ -1,11 +1,13 @@
 # m7db
 
 A Simple Package that helps to deal with sqlite in simple way 
+
 it's mean purpose to gives an abstract DAO class that provides the four CRUD operation plus common other transaction
-and remove redundant code that's we repeated in ever project
+
+and remove redundant code that's we repeated in every project
 
 
-## Whats will you get in the end
+## Whats will you get in the end 
 
 ```dart
 
