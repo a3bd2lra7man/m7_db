@@ -206,11 +206,11 @@ class User  extends M7Table{
 
 
 
-##  M7Dao Class 
+##  M7Dao<T> Class 
 
 M7Dao implementation is easy to have 
 
-1- extends M7Dao<T extends M7Table>
+1- extends M7Dao<T extends M7Table> .
 
 2- override the default constructor and fromDB(Map) method 
 
@@ -285,10 +285,10 @@ to do that you have to do three steps
     
     2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
     
-    3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
+    3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao dispose() function in your logic
  
     
-*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
+*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database make sure to updating the hold streams in M7Dao also*
  
  
 #### Example to use M7Dao with streams
