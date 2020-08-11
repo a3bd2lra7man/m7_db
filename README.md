@@ -1,11 +1,14 @@
 # m7db
 
-A Simple Package that helps to deal with sqlite in simple way 
+A Simple Dart Package that helps to deal with sqflite in simple way 
 
-it's mean purpose to gives an abstract DAO class that provides the four CRUD operation plus common other transaction
+it's mean purpose to 
 
-and remove redundant code that's we repeated in every project
+1- gives an abstract DAO class that provides the four CRUD operation plus common other transaction
 
+2- remove redundant code that's we repeated in every project
+
+3- gives helper methods for common situation with the sqflite
 
 ## Whats will you get in the end 
 
