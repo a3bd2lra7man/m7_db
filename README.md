@@ -67,7 +67,7 @@ main(){
 
 ## M7DB Class
 
-M7DB will create the database beyond you and provide a singleton database
+M7DB will create the database beyond you and provide a the database
 
 M7DB also provide a helper methods as createTableStatement()
 
@@ -113,7 +113,7 @@ class AppDB extends M7DB{
 
 M7Table is A helper class for helping creation of tables and it's fields
 
-M7Table have several help methods to do common situation happens to developers when working with sqlite 
+M7Table have several help methods to do common situation happens to developers when working with sqflite 
 
 The situations M7Table helps for is 
 
@@ -279,15 +279,16 @@ M7Dao work with the streams in mined and provides you a way to keep watching the
 
 M7Dao gives you that with the query you want 
 
-to do that you have three steps 
+to do that you have to do three steps 
 
     1- make your stream in streamController way
     
     2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
     
     3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
+ 
     
-    *if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
+*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
  
  
 #### Example to use M7Dao with streams
