@@ -10,7 +10,7 @@ description: A Simple Dart Package that helps to deal with sqflite in simple way
   3- gives helper methods for common situation with the sqflite
 
 version: 0.0.3
-author:
+author: Abood
 homepage: https://github.com/a3bd2lra7man/m7_db
 
 environment:
