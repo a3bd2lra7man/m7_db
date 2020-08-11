@@ -2,7 +2,7 @@
 
 A Simple Dart Package that helps to deal with sqflite in simple way 
 
-it's mean purpose to 
+it's main purpose to 
 
     1- gives an abstract DAO class that provides the four CRUD operation plus common other transaction
     
