@@ -8,6 +8,5 @@ import 'dart:async' show FutureOr,StreamController;
 part './db/M7Dao.dart';
 part './db/M7DB.dart';
 part './db/M7Table.dart';
-part './db/M7TableInfoMixin.dart';
 
 

@@ -1,252 +1,352 @@
 # m7db
 
-A Dart simple Api to helps working with sqflite .
-
-## What acutely this package helps you for
-
-1- try to remove the redundant code that's you always repeat in every project
-2- it have three main classes M7DB M7Table and M7Dao
+A Simple Package that helps to deal with sqlite in simple way 
+it's mean purpose to gives an abstract DAO class that provides the four CRUD operation plus common other transaction
+and remove redundant code that's we repeated in ever project
 
 
-### ex:
-
-You get all these function below by just overriding 3 classes in the right way
+# ex: What will we get in the end
 
 ```dart
-    main()async{
 
-      Database _database;
+// example
 
-      UserDao userDao = UserDao(_database, 'User');
+main(){
+  
+  Database database = AppDB();
+  String tableName = 'User';
+  // create the Dao
+  UserDao userDao = UserDao(database, tableName);
+  // this the the (data class) the table
+  User user = User();
 
-      User user = User(id: 1,name: "Abood",email: "a3bd2llah@gmail.com",isOnline: false);
 
-      userDao.insert(user);
 
-      userDao.delete(user);
+  // Basic CRUD operations package provides
+  
+  // get by id
+  userDao.getById('id');
+  
+  // return the whole table
+  userDao.getAll();
+  
+  //insert new one
+  userDao.insert(user);
+  
+  // update the old one
+  userDao.update(user);
+  
+  // delete the passed user
+  userDao.delete(user);
+  
+  // insert a list of User
+  userDao.insertAll([user]);
+  
+  ///  [watchAll] return a stream keep watching the whole table 
+  /// when any of the inherited CRUD operation called (the above ones) it's will automatically update it the stream to the newest value's
+  userDao.watchAll().listen((event) { });
 
-      userDao.update(user);
-
-      userDao.insertAll([user]);
-
-      userDao.getById(user.id);
-
-      userDao.getAll();
-
-      // return a stream to listen to it represent the whole table in data base
-      userDao.watchAll().listen((event) {'your event here';});
-
-      // to close the streams hold by user Dao
-      userDao.dispose();
-    }
+}
 ```
+## How to use it in the correct way
 
-### M7DB
+1- it have three main classes M7DB M7Table and M7Dao
+2- u have to extends the three tables to let them work with each other 
+3- the three classes try to remove the redundant code and gives you helper function
 
-M7DB is a simple class to create the database beyond you
+ 
 
-to use it
+### M7DB Class
 
-    1- you have to extends it
-    2- override the default constructor and pass the database's name you want to it
-    3- override onCreate method and create your table there
+M7DB will create the database beyond you and provide a singleton database
+M7DB provide a helper methods as createTable()
 
+#### Example
 
-#### ex:
+to use it u should extends M7DB
+
+M7DB force you to override 
+
+1- the databaseName getter
+
+2- onCreate function passed to the initialization of database *perfect place to create your table* 
 
 ```dart
+
+
 class AppDB extends M7DB{
-
-  // here u passed the database Name
-  AppDB(String databaseName) : super(databaseName);
-
-
+  
+  // override databaseName
+  @override
+  String get databaseName => 'App.db';
+  
   // create your tables
   @override
   FutureOr<void> onCreate(Database db, int version) async{
-    // execute tables creation
-    await db.execute("CREATE TABLE TABLE1 (id INTEGER AUTOINCREMENT PRIMARY KEY)");
-    await db.execute("CREATE TABLE TABLE2 (id INTEGER AUTOINCREMENT PRIMARY KEY)");
-  }
+    
+    /// create your tables by [createTable] helper function
+    await db.execute(createTable(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT'));
+    // or use the normal way
+    await db.execute('CREATE TABLE Normal_way (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT);');
+    
+    /// [createTable] helper function M7DB provides to create tables
+    createTable(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT');  
+
+}
+
+}
+
+```
+
+### M7Table Class
+
+M7Table is helper class for helping creation of tables fields
+
+M7Table have several help methods to do common situation happens to developers when working with sqlite 
+
+1- is the problem of saving boolean field to database tables, M7Table Provides  
+    *booleanToInt(bool)* to help you here 
+    and the reverse one *intToBoolean(int)*  
+    for helps read write boolean data from and to database
+
+2- work with date in the same convention of converting boolean to integer 
+    there is *dateToInt(DateTime)* 
+    and *intToDate(int)* helps read write DateTime from and to database   
+
+#### example
+
+first let's look at how the data class will be without extending M7Table
+
+```dart
+class User{
+  int id;
+  String name;
+  String email;
+  bool isCompleted;
+  DateTime date;
 
 }
 ```
 
-### M7Table
-
-M7Table another simple class to work with data classes that you wish to save it in database
-it's mainly helps the M7Dao class to let it do it's job
-
-to use it
-a- extends M7Table
-b- override copyWith(),primaryKey,toMap() and the super.fromMap(Map map) constructor
-
-*primaryKey* should be override because it's used in the M7Dao class when deleting and updating
-*toMap()* should also be override because the map return from here is the actual represent of the data will be saved to database
-*fromMap() constructor* this constructor will called when return data from database optionally but prefer
-*copyWith()* is not so harmful if you not implement it but it's recommended to override it
-    because it allows us to obtain a copy of the existing object but with some specified modifications u passed as parameters
-
-M7Table Have several helper methods that solve common  props face us as developer
-1- booleanToInt() to convert a bool to int *because sqlflite does't support boolean type* 0 == false 1 == true
-2- intToBoolean() to convert an int to boolean  0 == false 1 == true
-3- intToDate()
-4- dateToInt()
-
-*M7Table has no default constructor but has M7Table.create() with no parameters*
-#### ex:
+then let's look at how will be with the extending
 
 ```dart
 
-class User extends M7Table{
+class User  extends M7Table{
 
   int id;
   String name;
   String email;
-  bool isOnline;
+  bool isCompleted;
+  DateTime date;
 
+  // the default Constructor for M7Table class is M7Table.create() to create your own constructor make sure to call super.create()
+  User({this.id,this.name,this.email,this.isCompleted,this.date}):super.create();
 
-  // this will be used in Dao
+  // the primary key of this class represent the primary key of the database this will be used in Dao
+  // note M7Table is not smart if u passed a primary key that in the database is not a primary key it's will throw exception in runTime 
   @override
   get primaryKey => id;
 
 
-  // constructor with out parameters
-  User({this.id,this.name,this.email,this.isOnline}):super.create();
 
-
+  // optionally used with M7DAO when override it to tell M7Dao how to convert the data from database represent way to M7Table way
   User.fromMap(Map map) : super.fromMap(map){
     id = map['id'];
     name = map['name'];
     email = map['email'];
-    /// [intToBoolean] is a helper function to deal with boolean type in data base beyond u
-    isOnline = intToBoolean(map['isOnline']);
+
+    /// [intToBoolean]  convert an integer object to boolean when getting data from database
+    isCompleted = intToBoolean(map['isCompleted']);
+
+    /// [intToDate]  convert an integer object to DateTime when getting data from database
+    date = intToDate(map['date']);
   }
 
-  // this will be used in Dao
-  // real represent of how your data will be saved into DataBase
-  @override
-  Map<String, dynamic> toMap() {
-    return{
-      "id":this.id,
-      "name":this.name,
-      "email":this.email,
 
-       /// [booleanToInt] is a helper function to deal with boolean type in data base beyond u
-      "isOnline":booleanToInt(this.isOnline)
-    };
-  }
-
-  // optional but helps you if u implemented in your app to copy a fast copy of the existing object
+  // Used by M7DAO to insert data to the database
   @override
-  M7Table copyWith({int newId,String newName,String newEmail,bool newIsOnline}) {
-    return User(id:  newId ?? this.id,name: newName ?? this.name,email: newEmail ?? this.email,isOnline: newIsOnline ?? this.isOnline);
+  Map<String,dynamic > toMap() => {
+    "id":id,
+    "name":name,
+    "email":email,
+
+    /// [booleanToInt]  convert a boolean object to integer when saving data to database
+    "isCompleted":booleanToInt(this.isCompleted),
+
+    /// [dateToInt]  convert a date object to integer when saving data to database
+    "date":dateToInt(date),
+  };
+
+
+  // optionally but known as a good practice and the library thinking in that way
+  // simple copying existing object to new one
+  // helps you when do operation like update for fast copying the existing instance
+  @override
+  M7Table copyWith({int id,String name,String email,bool isCompleted}) {
+    return User(id: id ?? this.id,name: name ?? this.name,email: email ?? this.email,isCompleted: isCompleted ?? this.isCompleted,date: this.date);
   }
 
 }
-
 ```
 
-### M7Dao<T extends M7Table>
+###  M7DAO Class 
 
-M7Dao is a the winner of this package because once override it in the right way
-you will have a punch of helper methods on it's object
+DAO implementation is easy to have 
 
-first the basic crud operations
+1- extends M7Dao<T extends M7Table>
 
-    1- insert(T data)
-    2- insertAll(List<T> objects)
-    3- update(T data)
-    4- delete(T object)
-    5- getAll()
-    5- getById(id)
-
-second it's also work with stream and have a default one that will return the whole table
-
-    - watchAll()
-
-if u want to make your own stream u can because this library designed with that in mined
-by these steps
-
-    1- invoke the watch() function on M7Dao instance with parameter that do query the db
-    this will return a new stream
-    if u wish to make your own queries please don't forget to call notifyListener()
-
-    #### ex:
-
-```dart
-
-  Stream getMyOwnAll(){
-    Stream stream = watch(()async =>await database.query('table'));
-    notifyListener();
-    return stream;
-  }
-
-  void doAnyOperation()async{
-    await database.query('AnyOperation');
-    notifyListener();
-  }
-```
-
-    *notifyListener() just tell the class to emits new values to all streams that the class hold *
-    *to the M7Dao class to close all the streams it's hold use dispose()*
-
-
-
-u still can access the database from the inherited class and do what ever u want above the default ones
-
-to use it u have to
-    
-1- extends it
-
-2- override fromDB() *this called inside the helpers method for Basic Crud* u can make use the override T.fromMap() constructor in M7Table
-
-3- override the default constructor which has 2 parameter the first is the database instance the second is the table name to deal with
-
-4- call dispose() on it's instance to close all the stream M7Dao has
-#### ex:
+2- override the default constructor and fromDB method 
 
 ```dart
 
 class UserDao extends M7Dao<User>{
-
+  
+  // must override
   UserDao(Database database, String tableName) : super(database, tableName);
-
+  
+  // must override u can simply easy call .fromMap() from your M7Table
+  // this convert the data from database represent way to M7Table way
+  // not restricted to M7Table fromMap() constructor you can do what you wants
   @override
-  User fromDB(Object map) =>User.fromMap(map);
+  User fromDB(Map<String, dynamic> map) => User.fromMap(map);
+  
+  // available methods from M7Dao
+  
+  void operations()async{
+    
+    User user = User(id: 1,email: "Ali@gmail.com");
+    
+    // getting by id
+    User user1 = await this.getById('id');
+
+    // getting All the table
+    List<User> users=  await this.getAll();
+
+    // insertAll<T>
+    await this.insertAll([user,user]);
+    
+    // insert one entity 
+    await this.insert(user);
+
+    // updating one entity
+    await this.update(user.copyWith(name: "Ali"));
+
+    // deleting entity 
+    await this.delete(user);
+    
+    ///  [watchAll] return a stream keep watching the whole table 
+    /// when any of the inherited CRUD operation called (the above ones) it's will automatically update it the stream to the newest value's
+    userDao.watchAll().listen((event) { });
+    
+
+    // close all streams that the class holds
+    this.dispose();
+    
+    // u can access the database and do what ever  you need with it
+    this.database;
+
+    // u can make another stream watch the database with your custom query 
+    // to make it you have to do it in streamController Way
+ 
+    // 1- make your controller
+    StreamController streamController = StreamController();
+  
+    // 2- call watch() function in Dao instance with two parameter the first is the streamController and the second is function hold your query
+    userDao.watch(streamController, () => database.query(tableName));
+
+        
+  }
+  
+
+  // helper stream Controller
+  StreamController _streamController;
+
+  // u can do your own stream and passe
+  void dealWithStreams(){
+    // to tell the database u want to have a stream from certain expression to execute
+    // u cam use watch() function to keep watching the real data in time
+    watch(_streamController, () => database.query(tableName,where: 'name = ?',whereArgs: ['ahmed']));
+    
+    // this to up to date refreshing state to listeners
+    notifyListener();
+    
+  }
+
+
+  // then you should override dispose 
+  // and closing All streamController here   
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
+  }
+
+
+
+
 }
-
-main()async{
-
-  Database _database;
-
-  UserDao userDao = UserDao(_database, 'User');
-
-  User user = User(id: 1,name: "Abood",email: "a3bd2llah@gmail.com",isOnline: false);
-
-  userDao.insert(user);
-
-  userDao.delete(user);
-
-  userDao.update(user);
-
-  userDao.insertAll([user]);
-
-  userDao.getById(1);
-
-  userDao.getAll();
-
-  userDao.watchAll().listen((event) {'your event here';});
-
-  StreamController streamController;
-
-  Stream stream = userDao.watch(streamController, () async=>await userDao.database.query('table'));
-
-  userDao.notifyListener();
-
-
-  // to close the streams hold by user Dao
-  userDao.dispose();
-}
-
 ```
+
+M7Dao work with the streams in mined and provide you a way to keep watching the database in stream 
+M7Dao gives you that with the query you want 
+
+to do that you have three steps 
+
+1- make your stream in streamController way
+2- call watch function provide by M7Dao with two parameter the first is the streamController the second is your query
+3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
+
+*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to update it's stream*
+ 
+ 
+#### example yo use M7Dao with streams
+ 
+```dart
+
+class UserDao extends M7Dao<User>{
+  
+  // must override
+  UserDao(Database database, String tableName) : super(database, tableName);
+  
+  // must override u can simply easy call .fromMap() from your Table and not restricted you can do what you wants
+  @override
+  User fromDB(Map<String, dynamic> map) => User.fromMap(map);
+
+
+  // create your controller
+  StreamController _streamController = StreamController();
+
+  void dealWithStreams(){
+    
+    // to tell the database u want to have a stream from certain expression to execute
+    // u cam use watch() function to keep watching the real data in time
+    this.watch(_streamController, () => database.query(tableName,where: 'name = ?',whereArgs: ['ahmed']));
+
+    // this to update refreshing state to listeners
+    notifyListener();
+  }
+  
+  // u can make your own query
+  void makeMyOwnQuery()async{
+    await this.database.execute('Custom Query ');
+    
+    // don't forget to call to tell M7Dao i make a changed in database please tell the listeners that
+    notifyListener();
+  }
+  
+  void listen(){
+    // then listen to it and when ever the db changes the stream will be emitted with the new value's depends on your query u passed to watch() function
+    _streamController.stream.listen((event) { });
+  }
+  @override
+  void dispose() {
+    
+    // don't forget to close your stream
+    _streamController.close();
+    super.dispose();
+  }
+}
+
+``` 
+

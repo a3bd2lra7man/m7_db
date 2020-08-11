@@ -3,8 +3,7 @@ part of m7db;
 
 abstract class M7DB{
 
-  final String databaseName;
-  M7DB(this.databaseName);
+  String get databaseName;
 
   Database _db;
 
@@ -17,10 +16,18 @@ abstract class M7DB{
     return await openDatabase(
         "${await getDatabasesPath()}/$databaseName",
         onCreate: onCreate,
-        version: 1
+        version: 1,
     );
   }
 
+  // only executed when first time of initializing the Database
   FutureOr<void> onCreate(Database db, int version);
+
+  /// [createTable] helper function to create a table
+  /// it's need the tableName and fields or columns in database
+  String createTable({String tableName,String fields})=>'CREATE TABLE $tableName ($fields);';
+
+
+
 }
 

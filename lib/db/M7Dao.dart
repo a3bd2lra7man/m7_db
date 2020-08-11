@@ -1,13 +1,11 @@
 part of m7db;
 
-
 typedef  M7Query<T extends M7Table> = Future<List<Map<String,dynamic>>> Function();
 typedef  M7QueryRes<T extends M7Table> = Future<List<T>> Function();
 
 abstract class M7Dao<T extends M7Table>{
 
   Map<StreamController,M7QueryRes> _streamsMap = {};
-  //  ignore: close_sinks
   StreamController<List<T>> _stream;
   final Database database;
   final String tableName;
@@ -15,8 +13,10 @@ abstract class M7Dao<T extends M7Table>{
   M7Dao(this.database,this.tableName);
 
   void dispose(){
+    _stream.close();
     _streamsMap.keys.forEach((stream)=>stream.close());
   }
+
   Stream<List<T>>  watchAll() {
     if(_stream == null){
       _stream = StreamController();
@@ -26,13 +26,11 @@ abstract class M7Dao<T extends M7Table>{
     return _stream.stream;
   }
 
-  Stream watch(M7Query query) {
-    // ignore: close_sinks
-    StreamController streamController = StreamController();
+  void watch(StreamController streamController,M7Query query) {
     _streamsMap[streamController] =() async => (await query()).map(fromDB).toList();
     notifyListener();
-    return streamController.stream;
   }
+
   Future<T> getById(id)async{
     return fromDB((await database.query(tableName,where: 'id = ?' ,whereArgs: [id])).first);
   }
@@ -59,8 +57,6 @@ abstract class M7Dao<T extends M7Table>{
     await notifyListener();
   }
 
-
-
   Future getAll()async => await database.query(tableName);
 
   T fromDB (Map<String,dynamic> map);
@@ -71,3 +67,5 @@ abstract class M7Dao<T extends M7Table>{
 
 
 }
+
+
