@@ -79,7 +79,7 @@ M7DB force you to override
 
 1- the databaseName getter
 
-2- onCreate function passed to the initialization of database (perfect place to create your table) 
+2- onCreate function will be passed to the initialization of database (perfect place to create your table) 
 
 3- version which represent the database version ((for migrations))
 
@@ -108,7 +108,7 @@ class AppDB extends M7DB{
     /// [createTableStatement] helper function M7DB provides to create tables
     createTableStatement(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT');  
 
-}
+  }
 
 }
 
@@ -119,11 +119,11 @@ class AppDB extends M7DB{
 
 M7Table is A helper class for helping creation of tables and it's fields
 
-M7Table have several help methods to do common situation happens to developers when working with sqflite 
+M7Table have several help methods to do common situations happens to developers when working with sqflite 
 
 The situations M7Table helps for is 
 
-    1- is the problem of saving boolean field to database tables, M7Table Provides  
+    1- the problem of saving boolean fields to database tables, M7Table Provides  
         *booleanToInt(bool)* to help you here 
         and the reverse one *intToBoolean(int)*  
         for helps reading and writing boolean data from and to database
@@ -198,7 +198,7 @@ class User  extends M7Table{
   };
 
 
-  // optionally but known as a good practice and the library thinking in that way
+  // optionally but known as a good practice and this package thinking in that way
   // simple copying existing object to new one
   // helps you when do operation like update for fast copying the existing instance
   @override
@@ -236,44 +236,54 @@ class UserDao extends M7Dao<User>{
   User fromDB(Map<String, dynamic> map) => User.fromMap(map);
   
   // available methods from M7Dao
+}
+
+```
+
+and now it's all done to use them see the next example :
+
+```dart
   
-  void availableOperations()async{
+void useM7Dao()async{
+
+    AppDB appDB = AppDB();
+    
+    UserDao userDao = UserDao(await appDB.database, 'User');
     
     User user = User(id: 1,email: "Ali@gmail.com");
     
     // getting by id
     User user1 = await this.getById('id');
-
+    
     // getting All columns in the table <T>
     List<User> users=  await this.getAll();
-
+    
     // insertAll<T>
-    await this.insertAll([user,user]);
+    await userDao.insertAll([user,user]);
     
     // insert one entity <T> 
-    await this.insert(user);
-
+    await userDao.insert(user);
+    
     // updating one entity <T>
-    await this.update(user.copyWith(name: "Ali"));
-
+    await userDao.update(user.copyWith(name: "Ali"));
+    
     // deleting entity <T>
-    await this.delete(user);
+    await userDao.delete(user);
     
     ///  [watchAll] return a stream keep watching the whole table 
     /// when any of the inherited CRUD operation called (the above ones) it's will automatically update it the stream to the newest value's
     userDao.watchAll().listen((event) { });
     
-
+    
     // close all streams that the class holds
-    this.dispose();
+    userDao.dispose();
     
     // u can access the database and do what ever you need with it
-    this.database;
-
-  }
-
+    userDao.database;
 
 }
+
+
 ```
 
 
@@ -293,8 +303,8 @@ to do that you have to do three steps
     
     3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to call M7Dao dispose() function in your logic
  
-    
-*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database make sure to updating the hold streams in M7Dao also*
+ 
+*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao  something happened to the database so make sure to updating the hold streams in M7Dao also*
  
  
 #### Example to use M7Dao with streams

@@ -1,5 +1,49 @@
 part of m7db;
 
+
+class AppDB extends M7DB{
+
+  // override databaseName
+  @override
+  String get databaseName => 'App.db';
+
+  // database version
+  @override
+  int get version => 1;
+
+  // create your tables
+  @override
+  FutureOr<void> onCreate(Database db, int version) async{
+
+    /// create your tables by [createTableStatement] helper function
+    await db.execute(createTableStatement(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT'));
+    // or use the normal way
+    await db.execute('CREATE TABLE Normal_way (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT);');
+
+    /// [createTableStatement] helper function M7DB provides to create tables
+    createTableStatement(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT');
+
+  }
+
+}
+class UserDao extends M7Dao {
+
+  // must override
+  UserDao(Database database, String tableName) : super(database, tableName);
+
+  // must override u can simply easy call .fromMap() from your M7Table
+  // this convert the data from database represented way to M7Table way
+  // not restricted to M7Table fromMap() constructor you can do what you wants
+  @override
+  M7Table fromDB(Map<String, dynamic> map) => map as M7Table;
+
+// available methods from M7Dao
+}
+
+
+
+
+
 typedef  M7Query<T extends M7Table> = Future<List<Map<String,dynamic>>> Function();
 typedef  M7QueryRes<T extends M7Table> = Future<List<T>> Function();
 
