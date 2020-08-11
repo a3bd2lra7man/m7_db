@@ -7,6 +7,7 @@ abstract class M7DB{
 
   /// database version for migrations
   int get version ;
+
   /// the actual represent of the database
   Database _db;
 

@@ -169,7 +169,7 @@ class User  extends M7Table{
 
 
 
-  // optionally used with M7DAO when override it to tell M7Dao how to convert the data from database represent way to M7Table way
+  // optionally used with M7DAO when override it to tell M7Dao how to convert the data from database represent way to M7Table way  u have to add it manually
   User.fromMap(Map map) : super.fromMap(map){
     id = map['id'];
     name = map['name'];
@@ -253,10 +253,10 @@ void useM7Dao()async{
     User user = User(id: 1,email: "Ali@gmail.com");
     
     // getting by id
-    User user1 = await this.getById('id');
+    User user1 = await userDao.getById('id');
     
     // getting All columns in the table <T>
-    List<User> users=  await this.getAll();
+    List<User> users=  await userDao.getAll();
     
     // insertAll<T>
     await userDao.insertAll([user,user]);
@@ -269,6 +269,10 @@ void useM7Dao()async{
     
     // deleting entity <T>
     await userDao.delete(user);
+    
+
+    // delete all the entities
+    await userDao.deleteAll();
     
     ///  [watchAll] return a stream keep watching the whole table 
     /// when any of the inherited CRUD operation called (the above ones) it's will automatically update it the stream to the newest value's
