@@ -6,6 +6,7 @@ abstract class M7DB{
   /// database name will saved in sqlite
   String get databaseName;
 
+  /// the actual represent of the database
   Database _db;
 
   /// getter for the [_db] which represent the real database
