@@ -8,7 +8,7 @@ it's main purpose to
     
     2- remove redundant code that's we repeated in every project
     
-    3- gives helper methods for common situation with the sqflite
+    3- gives helper methods for common situations with the sqflite
 
 ## Whats will you get in the end 
 
@@ -67,7 +67,7 @@ main(){
 
 ## 1- M7DB Class
 
-M7DB will create the database beyond you 
+M7DB will create the database behalf of you 
 
 M7DB also provide a helper methods as createTableStatement()
 
@@ -81,6 +81,8 @@ M7DB force you to override
 
 2- onCreate function passed to the initialization of database (perfect place to create your table) 
 
+3- version which represent the database version ((for migrations))
+
 ```dart
 
 
@@ -89,6 +91,10 @@ class AppDB extends M7DB{
   // override databaseName
   @override
   String get databaseName => 'App.db';
+
+  // database version  
+  @override
+  int get version => 1;
   
   // create your tables
   @override
@@ -210,7 +216,7 @@ class User  extends M7Table{
 
 M7Dao implementation is easy to have 
 
-1- extends <T extends M7Table> M7Dao .
+1- extends  M7Dao <T extends M7Table>.
 
 2- override the default constructor and fromDB(Map) method 
 
@@ -231,7 +237,7 @@ class UserDao extends M7Dao<User>{
   
   // available methods from M7Dao
   
-  void operations()async{
+  void availableOperations()async{
     
     User user = User(id: 1,email: "Ali@gmail.com");
     
@@ -273,7 +279,7 @@ class UserDao extends M7Dao<User>{
 
 
 
-### M7Dao with streams in mined
+## M7Dao with streams
 
 M7Dao works with the streams in mined and provides you a way to keep watching the database in stream 
 
@@ -335,7 +341,7 @@ class UserDao extends M7Dao<User>{
   @override
   void dispose() {
     
-    // don't forget to close your stream
+    // don't forget to close your stream and call dispose() from your logic
     _streamController.close();
     super.dispose();
   }

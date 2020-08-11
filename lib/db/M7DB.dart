@@ -1,11 +1,12 @@
 part of m7db;
 
-
 abstract class M7DB{
 
   /// database name will saved in sqlite
   String get databaseName;
 
+  /// database version for migrations
+  int get version ;
   /// the actual represent of the database
   Database _db;
 
@@ -20,7 +21,7 @@ abstract class M7DB{
     return await openDatabase(
         "${await getDatabasesPath()}/$databaseName",
         onCreate: onCreate,
-        version: 1,
+        version: this.version,
     );
   }
 
