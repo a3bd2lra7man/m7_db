@@ -1,9 +1,6 @@
 part of m7db;
 
-
-abstract class  M7Table{
-
-
+abstract class M7Table {
   // trick for let the user of this class can make another constructor with no parameter for super class
   M7Table.create();
 
@@ -27,11 +24,10 @@ abstract class  M7Table{
   dynamic get primaryKey;
 
   /// [toMap] used by [M7Dao] when saving data to database
-  Map<String,dynamic> toMap();
+  Map<String, dynamic> toMap();
 
   /// fast copying of existing instances
   M7Table copyWith();
-
 
   // helping for equality operations
   @override
@@ -39,8 +35,7 @@ abstract class  M7Table{
 
   // helping for equality operations
   @override
-  bool operator ==( other) {
+  bool operator ==(other) {
     return this.primaryKey == other.primaryKey;
   }
-
 }
