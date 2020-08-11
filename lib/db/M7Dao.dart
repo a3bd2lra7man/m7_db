@@ -46,9 +46,9 @@ abstract class M7Dao<T extends M7Table> {
 
   /// get the wanted object by id from database
   Future<T> getById(id) async {
-    return fromDB(
-        (await database.query(tableName, where: 'id = ?', whereArgs: [id]))
-            .first);
+    List list =
+        await database.query(tableName, where: 'id = ?', whereArgs: [id]);
+    return list.length > 0 ? fromDB(list.first) : null;
   }
 
   /// insert all objects to the database
