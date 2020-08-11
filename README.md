@@ -53,7 +53,9 @@ main(){
 ## How to use it in the correct way
 
 1- it have three main classes M7DB M7Table and M7Dao
+
 2- u have to extends the three tables to let them work with each other 
+
 3- the three classes try to remove the redundant code and gives you helper function
 
  
