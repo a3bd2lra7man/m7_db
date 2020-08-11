@@ -3,15 +3,18 @@ part of m7db;
 
 abstract class M7DB{
 
+  /// database name will saved in sqlite
   String get databaseName;
 
   Database _db;
 
+  /// getter for the [_db] which represent the real database
   Future<Database> get database async{
     if(_db == null) _db = await _createAppDataBase();
     return _db;
   }
 
+  /// to create the [_db] object
   Future<Database> _createAppDataBase() async {
     return await openDatabase(
         "${await getDatabasesPath()}/$databaseName",

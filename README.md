@@ -210,7 +210,7 @@ class User  extends M7Table{
 
 M7Dao implementation is easy to have 
 
-1- extends M7Dao<T extends M7Table> .
+1- extends <T extends M7Table> M7Dao .
 
 2- override the default constructor and fromDB(Map) method 
 
@@ -275,7 +275,7 @@ class UserDao extends M7Dao<User>{
 
 ### M7Dao with streams in mined
 
-M7Dao work with the streams in mined and provides you a way to keep watching the database in stream 
+M7Dao works with the streams in mined and provides you a way to keep watching the database in stream 
 
 M7Dao gives you that with the query you want 
 
