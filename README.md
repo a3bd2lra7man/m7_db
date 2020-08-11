@@ -59,15 +59,15 @@ main(){
 
     1- it have three main classes M7DB M7Table and M7Dao
     
-    2- you have to extends the three tables to let them work with each other 
+    2- you have to extends the three classes to let them work with each other 
     
     3- the three classes try to remove the redundant code and gives you helper functions
 
  
 
-## M7DB Class
+## 1- M7DB Class
 
-M7DB will create the database beyond you and provide the database
+M7DB will create the database beyond you 
 
 M7DB also provide a helper methods as createTableStatement()
 
@@ -285,7 +285,7 @@ to do that you have to do three steps
     
     2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
     
-    3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao dispose() function in your logic
+    3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to call M7Dao dispose() function in your logic
  
     
 *if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database make sure to updating the hold streams in M7Dao also*
