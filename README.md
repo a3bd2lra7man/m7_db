@@ -64,7 +64,7 @@ main(){
 
 M7DB will create the database beyond you and provide a singleton database
 
-M7DB also provide a helper methods as createTable()
+M7DB also provide a helper methods as createTableStatement()
 
 #### Example
 
@@ -89,13 +89,13 @@ class AppDB extends M7DB{
   @override
   FutureOr<void> onCreate(Database db, int version) async{
     
-    /// create your tables by [createTable] helper function
-    await db.execute(createTable(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT'));
+    /// create your tables by [createTableStatement] helper function
+    await db.execute(createTableStatement(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT'));
     // or use the normal way
     await db.execute('CREATE TABLE Normal_way (id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT);');
     
-    /// [createTable] helper function M7DB provides to create tables
-    createTable(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT');  
+    /// [createTableStatement] helper function M7DB provides to create tables
+    createTableStatement(tableName: 'User',fields:'id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,email TEXT');  
 
 }
 

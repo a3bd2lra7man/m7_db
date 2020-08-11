@@ -23,9 +23,9 @@ abstract class M7DB{
   // only executed when first time of initializing the Database
   FutureOr<void> onCreate(Database db, int version);
 
-  /// [createTable] helper function to create a table
+  /// [createTableStatement] helper function to create a table
   /// it's need the tableName and fields or columns in database
-  String createTable({String tableName,String fields})=>'CREATE TABLE $tableName ($fields);';
+  String createTableStatement({String tableName,String fields})=>'CREATE TABLE $tableName ($fields);';
 
 
 
