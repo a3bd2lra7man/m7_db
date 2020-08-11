@@ -67,7 +67,7 @@ main(){
 
 ## M7DB Class
 
-M7DB will create the database beyond you and provide a the database
+M7DB will create the database beyond you and provide the database
 
 M7DB also provide a helper methods as createTableStatement()
 
