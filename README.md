@@ -55,11 +55,11 @@ main(){
 ```
 ## How to use it in the correct way
 
-1- it have three main classes M7DB M7Table and M7Dao
-
-2- you have to extends the three tables to let them work with each other 
-
-3- the three classes try to remove the redundant code and gives you helper functions
+    1- it have three main classes M7DB M7Table and M7Dao
+    
+    2- you have to extends the three tables to let them work with each other 
+    
+    3- the three classes try to remove the redundant code and gives you helper functions
 
  
 
@@ -109,20 +109,20 @@ class AppDB extends M7DB{
 
 ## M7Table Class
 
-M7Table is helper class for helping creation of tables and it's fields
+M7Table is A helper class for helping creation of tables and it's fields
 
 M7Table have several help methods to do common situation happens to developers when working with sqlite 
 
 The situations M7Table helps for is 
 
-1- is the problem of saving boolean field to database tables, M7Table Provides  
-    *booleanToInt(bool)* to help you here 
-    and the reverse one *intToBoolean(int)*  
-    for helps reading and writing boolean data from and to database
-
-2- work with DateTime in the same convention of converting boolean to integer 
-    there is *dateToInt(DateTime)* 
-    and *intToDate(int)* helps reading and writing DateTime from and to database   
+    1- is the problem of saving boolean field to database tables, M7Table Provides  
+        *booleanToInt(bool)* to help you here 
+        and the reverse one *intToBoolean(int)*  
+        for helps reading and writing boolean data from and to database
+    
+    2- work with DateTime in the same convention of converting boolean to integer 
+        there is *dateToInt(DateTime)* 
+        and *intToDate(int)* helps reading and writing DateTime from and to database   
 
 ### Example
 
@@ -204,9 +204,9 @@ class User  extends M7Table{
 
 
 
-##  M7DAO Class 
+##  M7Dao Class 
 
-DAO implementation is easy to have 
+M7Dao implementation is easy to have 
 
 1- extends M7Dao<T extends M7Table>
 
@@ -268,6 +268,9 @@ class UserDao extends M7Dao<User>{
 }
 ```
 
+
+
+
 ### M7Dao with streams in mined
 
 M7Dao work with the streams in mined and provides you a way to keep watching the database in stream 
@@ -276,16 +279,16 @@ M7Dao gives you that with the query you want
 
 to do that you have three steps 
 
-1- make your stream in streamController way
-
-2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
-
-3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
-
-*if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
+    1- make your stream in streamController way
+    
+    2- call watch() function provide by M7Dao with two parameter the first is the streamController the second is your query
+    
+    3- make sure to override the dispose function and close your controller if u forget M7Dao will close it for you but u have to tell M7Dao when to dispose() in your logic
+    
+    *if you wish to add your custom query please do not forget to call notifyListener() to tell M7Dao that's something happened to the database to updating it's stream*
  
  
-#### Example yo use M7Dao with streams
+#### Example to use M7Dao with streams
  
 ```dart
 
