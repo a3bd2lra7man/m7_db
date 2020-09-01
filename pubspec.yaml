@@ -1,7 +1,7 @@
 name: m7db
 description: A Simple Dart Package that helps to deal with sqflite in simple way using dao's way to gives fast development for users
 
-version: 0.0.7
+version: 0.0.8
 author:
 homepage: https://github.com/a3bd2lra7man/m7_db
 

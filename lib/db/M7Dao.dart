@@ -85,8 +85,10 @@ abstract class M7Dao<T extends M7Table> {
   /// return the whole table
   Future getAll() async => await database.query(tableName);
 
-  Future deleteAll() async => await database.delete(tableName);
-
+  Future deleteAll() async {
+    await database.delete(tableName);
+    await notifyListener();
+  }
   /// used by methods want to return values from database in known way
   T fromDB(Map<String, dynamic> map);
 
