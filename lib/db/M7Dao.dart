@@ -24,10 +24,13 @@ abstract class M7Dao<T extends M7Table> {
   void dispose() {
     _stream.close();
     _stream = null;
+
     _streamsMap.keys.forEach((stream) {
       stream.close();
       stream = null;
     });
+    _streamsMap = {};
+
   }
 
   /// to return the whole table and the stream saved in [_stream]
