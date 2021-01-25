@@ -12,7 +12,7 @@ abstract class M7DB {
 
   /// getter for the [_db] which represent the real database
   Future<Database> get database async {
-    if (_db == null|| ! _db.isOpen) _db = await _createAppDataBase();
+    if (_db == null || !_db.isOpen) _db = await _createAppDataBase();
     return _db;
   }
 
@@ -30,6 +30,7 @@ abstract class M7DB {
 
   /// [createTableStatement] helper function to create a table
   /// it's need the tableName and fields or columns in database
-  String createTableStatement({String tableName, String fields}) =>
+  String createTableStatement(
+          {@required String tableName, @required String fields}) =>
       'CREATE TABLE $tableName ($fields);';
 }
