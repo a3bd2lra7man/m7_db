@@ -30,10 +30,10 @@ class AppDB extends M7DB {
 // then create your data class
 
 class User extends M7Table {
-  int id;
-  String name;
-  bool isCompleted;
-  DateTime date;
+  int? id;
+  String? name;
+  bool? isCompleted;
+  DateTime? date;
 
   // the primary key of this class represent the primary key of the database this will be used in Dao
   // note M7Table is not smart if u passed a primary key that in the database is not a primary key it's will throw exception in runTime
@@ -62,17 +62,17 @@ class User extends M7Table {
         'name': name,
 
         /// [booleanToInt]  convert a boolean object to integer when saving data to database
-        'isCompleted': booleanToInt(isCompleted),
+        'isCompleted': booleanToInt(isCompleted!),
 
         /// [dateToInt]  convert a date object to integer when saving data to database
-        'date': dateToInt(date),
+        'date': dateToInt(date!),
       };
 
   // optionally but known as a good practice and this package thinking in that way
   // simple copying existing object to new one
   // helps you when do operation like update for fast copying the existing instance
   @override
-  M7Table copyWith({String name, bool isCompleted, DateTime dateTime}) {
+  User copyWith({String? name, bool? isCompleted, DateTime? dateTime}) {
     return User(
         id: this.id,
         name: name ?? this.name,
@@ -132,7 +132,7 @@ main() async {
   User user = User(id: 1);
 
   // getting by id
-  User user1 = await userDao.getById('id');
+  User? user1 = await userDao.getById('id');
 
   // getting All columns in the table <T>
   List<User> users = await userDao.getAll();
@@ -141,7 +141,7 @@ main() async {
   await userDao.insertAll(users);
 
   // insert one entity <T>
-  await userDao.insert(user1);
+  await userDao.insert(user1!);
 
   // updating one entity <T>
   await userDao.update(user.copyWith(name: "Ali"));

@@ -36,6 +36,6 @@ abstract class M7Table {
   // helping for equality operations
   @override
   bool operator ==(other) {
-    return this.primaryKey == other.primaryKey;
+    return (other is M7Table) && (this.primaryKey == other.primaryKey);
   }
 }

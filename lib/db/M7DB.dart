@@ -8,12 +8,12 @@ abstract class M7DB {
   int get version;
 
   /// the actual represent of the database
-  Database _db;
+  Database? _db;
 
   /// getter for the [_db] which represent the real database
   Future<Database> get database async {
-    if (_db == null || !_db.isOpen) _db = await _createAppDataBase();
-    return _db;
+    if (_db == null || !_db!.isOpen) _db = await _createAppDataBase();
+    return _db!;
   }
 
   /// to create the [_db] object
@@ -31,6 +31,6 @@ abstract class M7DB {
   /// [createTableStatement] helper function to create a table
   /// it's need the tableName and fields or columns in database
   String createTableStatement(
-          {@required String tableName, @required String fields}) =>
+          {required String tableName, required String fields}) =>
       'CREATE TABLE $tableName ($fields);';
 }
