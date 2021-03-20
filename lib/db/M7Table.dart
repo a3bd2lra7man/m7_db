@@ -27,7 +27,7 @@ abstract class M7Table {
   Map<String, dynamic> toMap();
 
   /// fast copying of existing instances
-  M7Table copyWith();
+  M7Table? copyWith();
 
   // helping for equality operations
   @override
